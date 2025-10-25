@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5-in-a-Row</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Hamburger Menu Button -->
+    <button id="hamburger-btn" class="hamburger-btn" aria-label="Open Menu">☰</button>
+    
+    <!-- Quick New Game Button -->
+    <button id="quick-new-game-btn" class="quick-new-game-btn" aria-label="New Game">New Game</button>
+
+    <!-- Status Message (floating) -->
+    <div id="status-message" class="status-message">White's turn</div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Game Settings</h2>
+                <button id="close-modal-btn" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h3>Player Setup</h3>
+                
+                <!-- Player 1 (Right) -->
+                <div class="player-config">
+                    <h4>Player 1 (Right)</h4>
+                    <label>
+                        <input type="checkbox" id="player1-enabled" checked>
+                        Enabled
+                    </label>
+                    <label>
+                        Color: <input type="color" id="player1-color" value="#FFFFFF">
+                    </label>
+                    <label>
+                        <input type="checkbox" id="player1-ai">
+                        AI Player
+                    </label>
+                    <label>
+                        Difficulty:
+                        <select id="player1-difficulty" class="ai-difficulty" disabled title="AI Difficulty">
+                            <option value="easy">Easy</option>
+                            <option value="medium">Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                    </label>
+                </div>
+
+                <!-- Player 2 (Left) -->
+                <div class="player-config">
+                    <h4>Player 2 (Left)</h4>
+                    <label>
+                        <input type="checkbox" id="player2-enabled" checked>
+                        Enabled
+                    </label>
+                    <label>
+                        Color: <input type="color" id="player2-color" value="#000000">
+                    </label>
+                    <label>
+                        <input type="checkbox" id="player2-ai">
+                        AI Player
+                    </label>
+                    <label>
+                        Difficulty:
+                        <select id="player2-difficulty" class="ai-difficulty" disabled title="AI Difficulty">
+                            <option value="easy">Easy</option>
+                            <option value="medium">Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                    </label>
+                </div>
+
+                <!-- Player 3 (Top) -->
+                <div class="player-config">
+                    <h4>Player 3 (Top)</h4>
+                    <label>
+                        <input type="checkbox" id="player3-enabled">
+                        Enabled
+                    </label>
+                    <label>
+                        Color: <input type="color" id="player3-color" value="#FF0000">
+                    </label>
+                    <label>
+                        <input type="checkbox" id="player3-ai">
+                        AI Player
+                    </label>
+                    <label>
+                        Difficulty:
+                        <select id="player3-difficulty" class="ai-difficulty" disabled title="AI Difficulty">
+                            <option value="easy">Easy</option>
+                            <option value="medium">Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                    </label>
+                </div>
+
+                <!-- Player 4 (Bottom) -->
+                <div class="player-config">
+                    <h4>Player 4 (Bottom)</h4>
+                    <label>
+                        <input type="checkbox" id="player4-enabled">
+                        Enabled
+                    </label>
+                    <label>
+                        Color: <input type="color" id="player4-color" value="#0000FF">
+                    </label>
+                    <label>
+                        <input type="checkbox" id="player4-ai">
+                        AI Player
+                    </label>
+                    <label>
+                        Difficulty:
+                        <select id="player4-difficulty" class="ai-difficulty" disabled title="AI Difficulty">
+                            <option value="easy">Easy</option>
+                            <option value="medium">Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="modal-actions">
+                    <button id="new-game-btn" class="btn btn-primary">New Game</button>
+                    <button id="undo-btn" class="btn btn-secondary">Undo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="game-container">
+        <!-- Top Player -->
+        <div class="player-panel player-top player3-panel">
+            <div class="player-indicator">
+                <div class="stone red-stone"></div>
+                <span class="player-name">Red</span>
+            </div>
+            <div class="captures">
+                <span class="captures-label">Captures:</span>
+                <span class="captures-count" id="player3-captures">0</span>
+            </div>
+        </div>
+
+        <div class="board-row">
+            <!-- Left Player -->
+            <div class="player-panel player-left player2-panel">
+                <div class="player-indicator">
+                    <div class="stone black-stone"></div>
+                    <span class="player-name">Black</span>
+                </div>
+                <div class="captures">
+                    <span class="captures-label">Captures:</span>
+                    <span class="captures-count" id="player2-captures">0</span>
+                </div>
+            </div>
+
+            <!-- Board -->
+            <div class="board-container">
+                <canvas id="game-board" width="700" height="700"></canvas>
+            </div>
+
+            <!-- Right Player -->
+            <div class="player-panel player-right player1-panel active">
+                <div class="player-indicator">
+                    <div class="stone white-stone"></div>
+                    <span class="player-name">White</span>
+                </div>
+                <div class="captures">
+                    <span class="captures-label">Captures:</span>
+                    <span class="captures-count" id="player1-captures">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Player (for future 3-4 player support) -->
+        <div class="player-panel player-bottom player4-panel">
+            <div class="player-indicator">
+                <div class="stone blue-stone"></div>
+                <span class="player-name">Blue</span>
+            </div>
+            <div class="captures">
+                <span class="captures-label">Captures:</span>
+                <span class="captures-count" id="player4-captures">0</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scoreboard (Paper Style) -->
+    <div class="scoreboard">
+        <h3 class="scoreboard-title">Score</h3>
+        <div class="scoreboard-entries">
+            <div class="score-entry" data-player="1">
+                <div class="player-name-score">White</div>
+                <div class="underline"></div>
+                <div class="tally-marks" id="tally-player1"></div>
+            </div>
+            <div class="score-entry" data-player="2">
+                <div class="player-name-score">Black</div>
+                <div class="underline"></div>
+                <div class="tally-marks" id="tally-player2"></div>
+            </div>
+            <div class="score-entry hidden" data-player="3">
+                <div class="player-name-score">Red</div>
+                <div class="underline"></div>
+                <div class="tally-marks" id="tally-player3"></div>
+            </div>
+            <div class="score-entry hidden" data-player="4">
+                <div class="player-name-score">Blue</div>
+                <div class="underline"></div>
+                <div class="tally-marks" id="tally-player4"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/board.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
