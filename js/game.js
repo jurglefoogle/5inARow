@@ -88,11 +88,13 @@ class Game {
         for (let i = 1; i <= 4; i++) {
             const player = this.players[i - 1];
             const enabled = document.getElementById(`player${i}-enabled`).checked;
+            const name = document.getElementById(`player${i}-name`).value.trim();
             const color = document.getElementById(`player${i}-color`).value;
             const isAI = document.getElementById(`player${i}-ai`).checked;
             const difficulty = document.getElementById(`player${i}-difficulty`).value;
             
             player.enabled = enabled;
+            player.name = name || this.getColorName(color); // Use custom name or fallback to color name
             player.color = color;
             player.isAI = isAI;
             player.difficulty = difficulty;
@@ -112,10 +114,7 @@ class Game {
             }
         });
         
-        // Update player names from colors
-        this.players.forEach(player => {
-            player.name = this.getColorName(player.color);
-        });
+        // Player names already set in loadPlayerConfig, no need to override
         
         // Show/hide player panels based on enabled status
         this.players.forEach(player => {
@@ -226,6 +225,11 @@ class Game {
         }
         
         this.moveHistory.push(moveState);
+        
+        // Check for open three (before checking win)
+        if (this.checkOpenThree(row, col, currentPlayer.id)) {
+            this.showFlashNotification(`${currentPlayer.name} has an OPEN THREE!`, 'open-three');
+        }
         
         // Check win conditions
         if (this.checkWin(row, col, currentPlayer.id)) {
@@ -410,6 +414,9 @@ class Game {
         this.statusMessage.style.borderColor = '#28a745';
         this.statusMessage.style.color = '#155724';
         
+        // Show flash notification
+        this.showFlashNotification(`${player.name} WON!`, 'win');
+        
         // Update scoreboard
         this.updateScoreboard();
     }
@@ -558,6 +565,86 @@ class Game {
                 }
             }
         }
+    }
+
+    showFlashNotification(message, type = '') {
+        const flashEl = document.getElementById('flash-notification');
+        const contentEl = flashEl.querySelector('.flash-content');
+        
+        // Set message
+        contentEl.textContent = message;
+        
+        // Add type class
+        flashEl.className = 'flash-notification show ' + type;
+        
+        // Auto-hide after 2.5 seconds
+        setTimeout(() => {
+            flashEl.classList.remove('show');
+            setTimeout(() => {
+                flashEl.className = 'flash-notification';
+            }, 300);
+        }, 2500);
+    }
+
+    checkOpenThree(row, col, playerId) {
+        // Check all 4 directions for an open three
+        // Open three = exactly 3 consecutive stones with BOTH ends open (empty)
+        const directions = [
+            [0, 1],   // Horizontal
+            [1, 0],   // Vertical
+            [1, 1],   // Diagonal \
+            [1, -1]   // Diagonal /
+        ];
+        
+        for (let [dr, dc] of directions) {
+            let count = 1; // Count the placed stone
+            let openEnds = 0;
+            
+            // Check forward direction
+            let forwardCount = 0;
+            for (let i = 1; i <= 3; i++) {
+                const newRow = row + dr * i;
+                const newCol = col + dc * i;
+                if (this.isValid({ row: newRow, col: newCol })) {
+                    if (this.board[newRow][newCol] === playerId) {
+                        forwardCount++;
+                    } else if (this.board[newRow][newCol] === 0 && i === forwardCount + 1) {
+                        // Empty space right after our stones = open end
+                        openEnds++;
+                        break;
+                    } else {
+                        break;
+                    }
+                }
+            }
+            count += forwardCount;
+            
+            // Check backward direction
+            let backwardCount = 0;
+            for (let i = 1; i <= 3; i++) {
+                const newRow = row - dr * i;
+                const newCol = col - dc * i;
+                if (this.isValid({ row: newRow, col: newCol })) {
+                    if (this.board[newRow][newCol] === playerId) {
+                        backwardCount++;
+                    } else if (this.board[newRow][newCol] === 0 && i === backwardCount + 1) {
+                        // Empty space right after our stones = open end
+                        openEnds++;
+                        break;
+                    } else {
+                        break;
+                    }
+                }
+            }
+            count += backwardCount;
+            
+            // Open three = exactly 3 stones with BOTH ends open
+            if (count === 3 && openEnds === 2) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 }
 

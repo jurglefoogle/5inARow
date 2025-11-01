@@ -16,6 +16,11 @@
     <!-- Status Message (floating) -->
     <div id="status-message" class="status-message">White's turn</div>
 
+    <!-- Flash Notification -->
+    <div id="flash-notification" class="flash-notification">
+        <div class="flash-content"></div>
+    </div>
+
     <!-- Settings Modal -->
     <div id="settings-modal" class="modal">
         <div class="modal-content">
@@ -32,6 +37,9 @@
                     <label>
                         <input type="checkbox" id="player1-enabled" checked>
                         Enabled
+                    </label>
+                    <label>
+                        Name: <input type="text" id="player1-name" class="player-name-input" value="White" placeholder="Player name">
                     </label>
                     <label>
                         Color: <input type="color" id="player1-color" value="#FFFFFF">
@@ -58,6 +66,9 @@
                         Enabled
                     </label>
                     <label>
+                        Name: <input type="text" id="player2-name" class="player-name-input" value="Black" placeholder="Player name">
+                    </label>
+                    <label>
                         Color: <input type="color" id="player2-color" value="#000000">
                     </label>
                     <label>
@@ -82,6 +93,9 @@
                         Enabled
                     </label>
                     <label>
+                        Name: <input type="text" id="player3-name" class="player-name-input" value="Red" placeholder="Player name">
+                    </label>
+                    <label>
                         Color: <input type="color" id="player3-color" value="#FF0000">
                     </label>
                     <label>
@@ -104,6 +118,9 @@
                     <label>
                         <input type="checkbox" id="player4-enabled">
                         Enabled
+                    </label>
+                    <label>
+                        Name: <input type="text" id="player4-name" class="player-name-input" value="Blue" placeholder="Player name">
                     </label>
                     <label>
                         Color: <input type="color" id="player4-color" value="#0000FF">
