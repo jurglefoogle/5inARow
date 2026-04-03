@@ -5,3 +5,4 @@ project:
 generatedAt: 
 2026-04-02T20:28:16.8776515-05:00
 purpose: selective corpus-only sync seed
+agentPushTest: 2026-04-02T23:59:00Z
